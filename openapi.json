@@ -1209,6 +1209,7 @@
         "flows": {
           "clientCredentials": {
             "tokenUrl": "/connect/token",
+            "refreshUrl": "/connect/token",
             "scopes": {
               "sof.clients.nip.isregistered": "Sprawdzenie, czy podany NIP jest klientem NFG"
             }
@@ -1219,7 +1220,9 @@
         "type": "oauth2",
         "description": "Autoryzacja dostępu do zasobów dotyczących klienta NFG. Wymaga powiązania konta Klienta NFG z kontem partnera. Partner otrzyma dane dostępowe wymagane do uwierzytelnienia.",
         "flows": {
-          "implicit": {
+          "authorizationCode": {
+            "tokenUrl": "/connect/token",
+            "refreshUrl": "/connect/token",
             "authorizationUrl": "/connect/authorize",
             "scopes": {
               "sof.clients.details": "Pobranie szczegółowych danych klienta i wysokości przyznanego limitu",

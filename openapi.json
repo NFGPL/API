@@ -463,17 +463,7 @@
               "sof.invoice.canfund"
             ]
           }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FundInvoiceRequest"
-              }
-            }
-          },
-          "required": true
-        }
+        ]
       }
     },
     "/client/details": {

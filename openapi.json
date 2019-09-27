@@ -3,11 +3,7 @@
   "info": {
     "version": "3.0.1",
     "title": "System Obsługi Faktoringu - WebAPI",
-    "description": "Dokumentacja dotycząca WebAPI dla Systemu Obsługi Faktoringu należącego do Narodowego Funduszu Gwarancyjnego S.A.<br/> <br/>\nKorzystając z WebAPI możesz w prosty sposób:\n  * zweryfikować, czy firma jest już Klientem NFG,\n  * zgłosić fakturę do finansowania,\n  * pobrać informacje dotyczące szczegółów umowy Klienta,\n  * otrzymać listę faktur kosztowych wystawionych w kontekście Klienta.\n\nMateriały dodatkowe ułatwiające proces integracji:<br />\n  1. [Schemat procesu pozyskania Klienta.](https://developer.nfg.pl/Diagrams/Partner_Sales.png)<br />\n  2. [Uproszczony schemat procesu finansowania faktury.](https://developer.nfg.pl/Diagrams/Partner_Financing_Simple.png)<br />\n  3. [Schemat procesu finansowania faktury.](https://developer.nfg.pl/Diagrams/Partner_Financing.png)<br />\n  4. [Kolekcja dostępnych metod WebAPI dla programu Postman](https://developer.nfg.pl/Postman/Collection.json).<br />\n\n<br /> Więcej informacji o usłudze Faktoringu znajdziesz na stronie [https://nfg.pl](https://nfg.pl).",
-    "contact": {
-      "name": "NFG R&D Team",
-      "email": "nfg-rozwoj@nfg.pl"
-    },
+    "description": "Dokumentacja dotycząca WebAPI dla Systemu Obsługi Faktoringu należącego do Narodowego Funduszu Gwarancyjnego S.A.<br /> <br />\nNFG R&D Team: [nfg-rozwoj@nfg.pl](mailto:nfg-rozwoj@nfg.pl)<br /> Zasady współpracy: [https://nfg.pl/wspolpraca-partnerska](https://nfg.pl/wspolpraca-partnerska)<br /> Polityka prywatności: [https://nfg.pl/polityka-prywatnosci](https://nfg.pl/polityka-prywatnosci)<br /> <br />\nKorzystając z WebAPI możesz w prosty sposób:\n  * zweryfikować, czy firma jest już Klientem NFG,\n  * zgłosić fakturę do finansowania,\n  * pobrać informacje dotyczące szczegółów umowy Klienta,\n  * otrzymać listę faktur kosztowych wystawionych w kontekście Klienta.\n\nMateriały dodatkowe ułatwiające proces integracji:<br />\n  1. [Schemat procesu pozyskania Klienta.](https://developer.nfg.pl/Diagrams/Partner_Sales.png)<br />\n  2. [Uproszczony schemat procesu finansowania faktury.](https://developer.nfg.pl/Diagrams/Partner_Financing_Simple.png)<br />\n  3. [Schemat procesu finansowania faktury.](https://developer.nfg.pl/Diagrams/Partner_Financing.png)<br />\n  4. [Kolekcja dostępnych metod WebAPI dla programu Postman](https://developer.nfg.pl/Postman/Collection.json).<br />\n\n<br /> Więcej informacji o usłudze Faktoringu znajdziesz na stronie [https://nfg.pl](https://nfg.pl).",
     "x-logo": {
       "url": "https://sof.nfg.pl/UI/themes/newnfg/images/logo.png"
     }
@@ -18,20 +14,20 @@
       "description": "Informacje o (potencjalnym) kliencie."
     },
     {
-      "name": "CostDocuments",
-      "description": "Dane faktur kosztowych klienta."
-    },
-    {
       "name": "Invoice",
       "description": "Zgłaszanie faktur do finansowania oraz weryfikacja ich statusu."
+    },
+    {
+      "name": "SMS",
+      "description": "Wysyłanie autoryzacyjnych wiadomości sms."
     },
     {
       "name": "Documents",
       "description": "Dokumentacja kliencka, obejmująca umowy i zgody niezbędne do finansowania faktur."
     },
     {
-      "name": "SMS",
-      "description": "Wysyłanie autoryzacyjnych wiadomości sms."
+      "name": "CostDocuments",
+      "description": "Dane faktur kosztowych klienta."
     },
     {
       "name": "Dictionaries",
@@ -336,7 +332,8 @@
     "/client/canAddInvoice": {
       "get": {
         "tags": [
-          "Client"
+          "Client",
+          "Invoice"
         ],
         "summary": "Sprawdzenie, czy klient ma możliwość zgłaszania faktur do finansowania",
         "description": "Metoda pozwala na sprawdzenie, czy klient powiązany z tokenem ma możliwość dodania faktury.",
@@ -362,6 +359,121 @@
             ]
           }
         ]
+      }
+    },
+    "/invoice/add": {
+      "post": {
+        "tags": [
+          "Invoice"
+        ],
+        "summary": "Przekazanie danych faktury do SOF",
+        "description": "Dane faktury i dane płatnika zostaną wprowadzone do Systemu Obsługi Faktoringu w wersji roboczej. Dodanie faktury nie jest równoznaczne z przekazaniem jej do finansowania. W celu dokończenia procesu finansowania wymagane jest wyrażenie niezbędnych zgód oraz autoryzacja kodem SMS, przekazanym na numer telefonu Klienta zdefiniowany w SOF. Pełen proces finansowania faktury obsługiwany jest przy wykorzystaniu kolejnych metod WebApi lub może zostać dokończony przez Klienta z poziomu aplikacji SOF.\n\n  <br />\n  Szczegółowe informacje dotyczące procesu przekazania faktury do finansowania znajdziesz na poniższym diagramie: <br />\n  https://developer.nfg.pl/Diagrams/Partner_Financing.png",
+        "responses": {
+          "201": {
+            "description": "Informacja o powodzeniu dodania faktury.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceAdd201Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Błędne dane faktury lub brak możliwości wprowadzenia faktury.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceAdd400Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Brak autoryzacji wywołania metody."
+          }
+        },
+        "security": [
+          {
+            "authorization_code_auth": [
+              "sof.invoice.add"
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Invoice"
+              }
+            }
+          },
+          "description": "Dane faktury",
+          "required": true
+        }
+      }
+    },
+    "/invoice/{invoiceId}/canFund": {
+      "get": {
+        "tags": [
+          "Invoice"
+        ],
+        "summary": "Weryfikacja, czy faktura może zostać skierowana do finansowania",
+        "description": "Metoda pozwala na weryfikację, czy faktura wprowadzona do Systemu Obsługi Faktoringu (będąca aktualnie w statusie Wersja robocza), może zostać skierowana do finansowania. Wywołanie tej metody jest zalecane w celu sprawdzenia, czy faktura dalej spełnia wszystkie ograniczenia wynikające z Ogólnych Warunków Usługi Faktoringowej (m.in długość okresu odroczonego, czy liczba dni pozostająca do terminu płatności faktury).",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "invoiceId",
+            "description": "Identyfikator systemowy faktury",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Prawidłowe skierowanie zadanej faktury do finansowania.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FundInvoiceResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Nieprawidłowe zapytanie – żądanie nie może być obsłużone przez serwer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FundInvoiceResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Brak autoryzacji wywołania metody."
+          }
+        },
+        "security": [
+          {
+            "authorization_code_auth": [
+              "sof.invoice.canfund"
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FundInvoiceRequest"
+              }
+            }
+          },
+          "required": true
+        }
       }
     },
     "/client/details": {
@@ -577,166 +689,6 @@
         ]
       }
     },
-    "/invoice/add": {
-      "post": {
-        "tags": [
-          "Invoice"
-        ],
-        "summary": "Przekazanie danych faktury do SOF",
-        "description": "Dane faktury i dane płatnika zostaną wprowadzone do Systemu Obsługi Faktoringu w wersji roboczej. Dodanie faktury nie jest równoznaczne z przekazaniem jej do finansowania. W celu dokończenia procesu finansowania wymagane jest wyrażenie niezbędnych zgód oraz autoryzacja kodem SMS, przekazanym na numer telefonu Klienta zdefiniowany w SOF. Pełen proces finansowania faktury obsługiwany jest przy wykorzystaniu kolejnych metod WebApi lub może zostać dokończony przez Klienta z poziomu aplikacji SOF.\n\n  <br />\n  Szczegółowe informacje dotyczące procesu przekazania faktury do finansowania znajdziesz na poniższym diagramie: <br />\n  https://developer.nfg.pl/Diagrams/Partner_Financing.png",
-        "responses": {
-          "201": {
-            "description": "Informacja o powodzeniu dodania faktury.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InvoiceAdd201Response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Błędne dane faktury lub brak możliwości wprowadzenia faktury.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InvoiceAdd400Response"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Brak autoryzacji wywołania metody."
-          }
-        },
-        "security": [
-          {
-            "authorization_code_auth": [
-              "sof.invoice.add"
-            ]
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Invoice"
-              }
-            }
-          },
-          "description": "Dane faktury",
-          "required": true
-        }
-      }
-    },
-    "/invoice/{invoiceId}/status": {
-      "get": {
-        "tags": [
-          "Invoice"
-        ],
-        "summary": "Status zgłoszonej faktury",
-        "description": "Metoda pozwala na pobranie statusu faktury zgłoszonej za pomocą metody: POST /invoice/add.",
-        "parameters": [
-          {
-            "name": "invoiceId",
-            "in": "path",
-            "required": true,
-            "description": "Identyfikator systemowy faktury",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Informacja o aktualnym statusie faktury.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InvoiceStatusResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Brak autoryzacji wywołania metody."
-          },
-          "404": {
-            "description": "Nie znaleziono faktury w kontekście zalogowanego klienta."
-          }
-        },
-        "security": [
-          {
-            "authorization_code_auth": [
-              "sof.invoice.status"
-            ]
-          }
-        ]
-      }
-    },
-    "/invoice/{invoiceId}/canFund": {
-      "post": {
-        "tags": [
-          "Invoice"
-        ],
-        "summary": "Weryfikacja, czy faktura może zostać skierowana do finansowania",
-        "description": "Metoda pozwala na weryfikację, czy faktura wprowadzona do Systemu Obsługi Faktoringu (będąca aktualnie w statusie Wersja robocza), może zostać skierowana do finansowania. Wywołanie tej metody jest zalecane w celu sprawdzenia, czy faktura dalej spełnia wszystkie ograniczenia wynikające z Ogólnych Warunków Usługi Faktoringowej (m.in długość okresu odroczonego, czy liczba dni pozostająca do terminu płatności faktury).",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "invoiceId",
-            "description": "Identyfikator systemowy faktury",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Prawidłowe skierowanie zadanej faktury do finansowania.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FundInvoiceResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Nieprawidłowe zapytanie – żądanie nie może być obsłużone przez serwer.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FundInvoiceResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Brak autoryzacji wywołania metody."
-          }
-        },
-        "security": [
-          {
-            "authorization_code_auth": [
-              "sof.invoice.canfund"
-            ]
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FundInvoiceRequest"
-              }
-            }
-          },
-          "required": true
-        }
-      }
-    },
     "/invoice/{invoiceId}/fund": {
       "post": {
         "tags": [
@@ -798,6 +750,51 @@
           },
           "required": true
         }
+      }
+    },
+    "/invoice/{invoiceId}/status": {
+      "get": {
+        "tags": [
+          "Invoice"
+        ],
+        "summary": "Status zgłoszonej faktury",
+        "description": "Metoda pozwala na pobranie statusu faktury zgłoszonej za pomocą metody: POST /invoice/add.",
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "required": true,
+            "description": "Identyfikator systemowy faktury",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Informacja o aktualnym statusie faktury.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceStatusResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Brak autoryzacji wywołania metody."
+          },
+          "404": {
+            "description": "Nie znaleziono faktury w kontekście zalogowanego klienta."
+          }
+        },
+        "security": [
+          {
+            "authorization_code_auth": [
+              "sof.invoice.status"
+            ]
+          }
+        ]
       }
     },
     "/invoice/{invoiceId}/cessiontypes": {

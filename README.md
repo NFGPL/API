@@ -2,10 +2,10 @@
 
 Dokumentacja dotycząca WebAPI dla Systemu Obsługi Faktoringu należącego do Narodowego Funduszu Gwarancyjnego S.A.
 
-NFG R&D Team: nfg-rozwoj@nfg.pl
-Zasady współpracy: https://nfg.pl/wspolpraca-partnerska
-Licencja: NFG
-Polityka prywatności: https://nfg.pl/polityka-prywatnosci/
+NFG R&D Team: nfg-rozwoj@nfg.pl<br />
+Zasady współpracy: https://nfg.pl/wspolpraca-partnerska<br />
+Licencja: NFG<br />
+Polityka prywatności: https://nfg.pl/polityka-prywatnosci
    
 Korzystając z WebAPI możesz w prosty sposób:
 * zweryfikować, czy firma jest już Klientem NFG,

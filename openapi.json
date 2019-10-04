@@ -329,6 +329,51 @@
         ]
       }
     },
+    "/client/details/{taxId}": {
+      "get": {
+        "tags": [
+          "Client"
+        ],
+        "summary": "Pobranie szczegółów dotyczących klienta NFG.",
+        "description": "Metoda pozwala na pobranie informacji o limitach klienta oraz liczbie i wartości sfinansowanych faktur.\n<br /><br /> Informacja o limitach klienta składa się z wartości przyznanych w obrębie czterech kategorii:<br /> 1. _Limit ogólny_ - uwzględniający finansowanie wszystkich faktur.<br /> 2. Limit uwzględniający finansowania w ramach _Faktoringu jawnego_.<br /> 3. Limit uwzględniający finansowania w ramach _Faktoringu z zaliczką_.<br /> 4. Limit uwzględniający finansowania w ramach _Faktoringu cichego_.<br /> <br /> W ramach każdej kategorii przekazywana jest informacja, dotycząca:<br /> 1. _limitu dostępnego do wykorzystania_ - aktualnie dostępnej kwoty limitu,<br /> 2. _limitu wykorzystanego_ - wartości udzielonego finansowania,<br /> 3. _limitu przyznanego_ - wartości limitu przyznanego.<br />\n<br />\nPo zgłoszeniu faktury do finansowania konieczny jest wybór typu cesji, w ramach którego faktura zostanie sfinansowana (lista dostępnych do wyboru typów cesji jest zależna od wyniku analizy kredytowej). Finansowanie faktury pomniejsza dostępny limit ogólny klienta oraz limit wybranego typu cesji.",
+        "parameters": [
+          {
+            "name": "taxId",
+            "in": "path",
+            "required": true,
+            "description": "NIP klienta",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Szczegółowe informacje dotyczące klienta NFG.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientDetailsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Brak autoryzacji wywołania metody."
+          },
+          "404": {
+            "description": "Podany NIP nie jest Klientem NFG."
+          }
+        },
+        "security": [
+          {
+            "authorization_code_auth": [
+              "sof.clients.details"
+            ]
+          }
+        ]
+      }
+    },
     "/client/canAddInvoice": {
       "get": {
         "tags": [
@@ -461,37 +506,6 @@
           {
             "authorization_code_auth": [
               "sof.invoice.canfund"
-            ]
-          }
-        ]
-      }
-    },
-    "/client/details": {
-      "get": {
-        "tags": [
-          "Client"
-        ],
-        "summary": "Pobranie szczegółów dotyczących klienta NFG.",
-        "description": "Metoda pozwala na pobranie informacji o limicie klienta, liczbie i wartości sfinansowanych faktur.",
-        "responses": {
-          "200": {
-            "description": "Szczegółowe informacje dotyczące klienta NFG.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ClientDetailsResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Brak autoryzacji wywołania metody."
-          }
-        },
-        "security": [
-          {
-            "authorization_code_auth": [
-              "sof.clients.details"
             ]
           }
         ]
@@ -1586,7 +1600,7 @@
           }
         }
       },
-      "ClientDetailsResponse": {
+      "FactoringLimit": {
         "type": "object",
         "properties": {
           "availableLimit": {
@@ -1600,6 +1614,24 @@
           "grantedLimit": {
             "description": "Kwota limitu przyznanego",
             "type": "number"
+          }
+        }
+      },
+      "ClientDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "generalLimit": {
+            "description": "sdgd",
+            "$ref": "#/components/schemas/FactoringLimit"
+          },
+          "silentCessionLimit": {
+            "$ref": "#/components/schemas/FactoringLimit"
+          },
+          "advancePaymentCessionLimit": {
+            "$ref": "#/components/schemas/FactoringLimit"
+          },
+          "explicitCessionLimit": {
+            "$ref": "#/components/schemas/FactoringLimit"
           },
           "fundedInvoicesCount": {
             "description": "Liczba niespłaconych faktur sfinansowanych",
@@ -1937,10 +1969,24 @@
         }
       },
       "AddInvoiceScansResponse": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "success": {
+            "description": "Informacja, czy prawidłowo dodano skan.",
+            "type": "boolean",
+            "example": true
+          }
+        }
       },
       "CessionTypeDecisionResponse": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "success": {
+            "description": "Informacja, czy prawidłowo dodano skan.",
+            "type": "boolean",
+            "example": true
+          }
+        }
       }
     }
   }

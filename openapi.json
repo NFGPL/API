@@ -329,13 +329,47 @@
         ]
       }
     },
-    "/client/details/{taxId}": {
+    "/client/details": {
       "get": {
         "tags": [
           "Client"
         ],
-        "summary": "Pobranie szczegółów dotyczących klienta NFG.",
-        "description": "Metoda pozwala na pobranie informacji o limitach klienta oraz liczbie i wartości sfinansowanych faktur.\n<br /><br /> Informacja o limitach klienta składa się z wartości przyznanych w obrębie czterech kategorii:<br /> 1. _Limit ogólny_ - uwzględniający finansowanie wszystkich faktur.<br /> 2. Limit uwzględniający finansowania w ramach _Faktoringu jawnego_.<br /> 3. Limit uwzględniający finansowania w ramach _Faktoringu z zaliczką_.<br /> 4. Limit uwzględniający finansowania w ramach _Faktoringu cichego_.<br /> <br /> W ramach każdej kategorii przekazywana jest informacja, dotycząca:<br /> 1. _limitu dostępnego do wykorzystania_ - aktualnie dostępnej kwoty limitu,<br /> 2. _limitu wykorzystanego_ - wartości udzielonego finansowania,<br /> 3. _limitu przyznanego_ - wartości limitu przyznanego.<br />\n<br />\nPo zgłoszeniu faktury do finansowania konieczny jest wybór typu cesji, w ramach którego faktura zostanie sfinansowana (lista dostępnych do wyboru typów cesji jest zależna od wyniku analizy kredytowej). Finansowanie faktury pomniejsza dostępny limit ogólny klienta oraz limit wybranego typu cesji.",
+        "summary": "Pobranie szczegółów dotyczących klienta NFG (w kontekście tokenu klienta).",
+        "description": "Metoda pozwala na pobranie informacji o limitach klienta oraz liczbie i wartości sfinansowanych faktur.\n<br /><br />\nMetoda ta zwraca informacje wyłącznie o kliencie, w kontekście którego został wystawiony token autoryzacyjny.\n<br /><br /> Informacja o limitach klienta składa się z wartości przyznanych w obrębie czterech kategorii:<br /> 1. _Limit ogólny_ - uwzględniający finansowanie wszystkich faktur.<br /> 2. Limit uwzględniający finansowania w ramach _Faktoringu jawnego_.<br /> 3. Limit uwzględniający finansowania w ramach _Faktoringu z zaliczką_.<br /> 4. Limit uwzględniający finansowania w ramach _Faktoringu cichego_.<br /> <br /> W ramach każdej kategorii przekazywana jest informacja, dotycząca:<br /> 1. _limitu dostępnego do wykorzystania_ - aktualnie dostępnej kwoty limitu,<br /> 2. _limitu wykorzystanego_ - wartości udzielonego finansowania,<br /> 3. _limitu przyznanego_ - wartości limitu przyznanego.<br />\n<br />\nPo zgłoszeniu faktury do finansowania konieczny jest wybór typu cesji, w ramach którego faktura zostanie sfinansowana (lista dostępnych do wyboru typów cesji jest zależna od wyniku analizy kredytowej). Finansowanie faktury pomniejsza dostępny limit ogólny klienta oraz limit wybranego typu cesji.",
+        "responses": {
+          "200": {
+            "description": "Szczegółowe informacje dotyczące klienta NFG.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientDetailsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Brak autoryzacji wywołania metody."
+          },
+          "404": {
+            "description": "Podany NIP nie jest Klientem NFG."
+          }
+        },
+        "security": [
+          {
+            "authorization_code_auth": [
+              "sof.clients.details"
+            ]
+          }
+        ]
+      }
+    },
+    "/client/details/integration/{taxId}": {
+      "get": {
+        "tags": [
+          "Client"
+        ],
+        "summary": "Pobranie szczegółów dotyczących klienta NFG (w kontekście tokenu Partnera).",
+        "description": "Metoda pozwala na pobranie informacji o limitach klienta oraz liczbie i wartości sfinansowanych faktur.\n<br /><br />\nMetoda ta zwraca informacje jedynie dla klientów, którzy wyrazili zgodę na udostępnianie swoich danych Partnerowi. W przypadku braku wyrażonej zgody zwrócony zostanie kod HTTP 403 (_Zabroniony_).\n<br /><br /> Informacja o limitach klienta składa się z wartości przyznanych w obrębie czterech kategorii:<br /> 1. _Limit ogólny_ - uwzględniający finansowanie wszystkich faktur.<br /> 2. Limit uwzględniający finansowania w ramach _Faktoringu jawnego_.<br /> 3. Limit uwzględniający finansowania w ramach _Faktoringu z zaliczką_.<br /> 4. Limit uwzględniający finansowania w ramach _Faktoringu cichego_.<br /> <br /> W ramach każdej kategorii przekazywana jest informacja, dotycząca:<br /> 1. _limitu dostępnego do wykorzystania_ - aktualnie dostępnej kwoty limitu,<br /> 2. _limitu wykorzystanego_ - wartości udzielonego finansowania,<br /> 3. _limitu przyznanego_ - wartości limitu przyznanego.<br />\n<br />\nPo zgłoszeniu faktury do finansowania konieczny jest wybór typu cesji, w ramach którego faktura zostanie sfinansowana (lista dostępnych do wyboru typów cesji jest zależna od wyniku analizy kredytowej). Finansowanie faktury pomniejsza dostępny limit ogólny klienta oraz limit wybranego typu cesji.",
         "parameters": [
           {
             "name": "taxId",
@@ -361,6 +395,9 @@
           "401": {
             "description": "Brak autoryzacji wywołania metody."
           },
+          "403": {
+            "description": "Klient nie wyraził zgody na przekazanie danych do Partnera."
+          },
           "404": {
             "description": "Podany NIP nie jest Klientem NFG."
           }
@@ -368,7 +405,7 @@
         "security": [
           {
             "authorization_code_auth": [
-              "sof.clients.details"
+              "sof.clients.details.integration"
             ]
           }
         ]

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "1bbf286e-ea75-4bc1-8d37-6a2a67b2cf40",
+		"_postman_id": "ac4c25a0-6935-488b-8368-66b9b7217b61",
 		"name": "Public SOF WebAPI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -48,7 +48,8 @@
 						]
 					}
 				}
-			]
+			],
+			"protocolProfileBehavior": {}
 		},
 		{
 			"name": "Client",
@@ -69,12 +70,13 @@
 								"checkifregistered",
 								"9718892236"
 							]
-						}
+						},
+						"description": "Required authorization_code_auth token."
 					},
 					"response": []
 				},
 				{
-					"name": "Client details",
+					"name": "Client details (client context)",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -94,6 +96,35 @@
 								"api",
 								"client",
 								"details"
+							]
+						},
+						"description": "Required implicit_auth token. Parameter 1 means invoice's identifier."
+					},
+					"response": []
+				},
+				{
+					"name": "Client details (partner context)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/client/details/integration/9718892236",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"client",
+								"details",
+								"integration",
+								"9718892236"
 							]
 						},
 						"description": "Required implicit_auth token. Parameter 1 means invoice's identifier."
@@ -140,7 +171,8 @@
 						]
 					}
 				}
-			]
+			],
+			"protocolProfileBehavior": {}
 		},
 		{
 			"name": "Invoices",
@@ -545,7 +577,8 @@
 						]
 					}
 				}
-			]
+			],
+			"protocolProfileBehavior": {}
 		},
 		{
 			"name": "Approvals",
@@ -569,7 +602,8 @@
 					},
 					"response": []
 				}
-			]
+			],
+			"protocolProfileBehavior": {}
 		},
 		{
 			"name": "Cost Documents",
@@ -631,7 +665,8 @@
 					},
 					"response": []
 				}
-			]
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"auth": {
@@ -675,5 +710,6 @@
 				]
 			}
 		}
-	]
+	],
+	"protocolProfileBehavior": {}
 }

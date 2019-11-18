@@ -1249,7 +1249,8 @@
             "tokenUrl": "/connect/token",
             "refreshUrl": "/connect/token",
             "scopes": {
-              "sof.clients.nip.isregistered": "Sprawdzenie, czy podany NIP jest klientem NFG"
+              "sof.clients.nip.isregistered": "Sprawdzenie, czy podany NIP jest klientem NFG",
+              "sof.clients.details.integration": "Pobranie szczegółowych danych klienta i wysokości przyznanego limitu (w kontekście Partnera)"
             }
           }
         }
@@ -1263,7 +1264,7 @@
             "refreshUrl": "/connect/token",
             "authorizationUrl": "/connect/authorize",
             "scopes": {
-              "sof.clients.details": "Pobranie szczegółowych danych klienta i wysokości przyznanego limitu",
+              "sof.clients.details": "Pobranie szczegółowych danych klienta i wysokości przyznanego limitu (w kontekście klienta)",
               "sof.clients.invoices.canadd": "Sprawdzenie możliwości dodawania faktur",
               "sof.invoice.canfund": "Sprawdzenie możliwości zgłoszenia do finansowania faktury",
               "sof.invoice.status": "Sprawdzenie statusu faktury",

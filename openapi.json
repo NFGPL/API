@@ -35,7 +35,7 @@
     }
   ],
   "paths": {
-    "/api/costdocuments/{id}/file": {
+    "/costdocuments/{id}/file": {
       "get": {
         "tags": [
           "CostDocuments"
@@ -88,7 +88,7 @@
         ]
       }
     },
-    "/api/costdocuments/{id}": {
+    "/costdocuments/{id}": {
       "get": {
         "tags": [
           "CostDocuments"
@@ -134,7 +134,7 @@
         ]
       }
     },
-    "/api/costdocuments": {
+    "/costdocuments": {
       "get": {
         "tags": [
           "CostDocuments"
@@ -405,7 +405,7 @@
         "security": [
           {
             "authorization_code_auth": [
-              "sof.clients.details.integration"
+              "sof.clients.integration.details"
             ]
           }
         ]
@@ -1231,11 +1231,11 @@
   },
   "servers": [
     {
-      "url": "https://api.nfg.pl/",
+      "url": "https://api.nfg.pl/api/",
       "description": "Serwer produkcyjny"
     },
     {
-      "url": "https://api-test.nfg.pl/",
+      "url": "https://api-test.nfg.pl/api/",
       "description": "Serwer testowy"
     }
   ],
@@ -1250,7 +1250,7 @@
             "refreshUrl": "/connect/token",
             "scopes": {
               "sof.clients.nip.isregistered": "Sprawdzenie, czy podany NIP jest klientem NFG",
-              "sof.clients.details.integration": "Pobranie szczegółowych danych klienta i wysokości przyznanego limitu (w kontekście Partnera)"
+              "sof.clients.integration.details": "Pobranie szczegółowych danych klienta i wysokości przyznanego limitu (w kontekście Partnera)"
             }
           }
         }
@@ -1559,7 +1559,7 @@
           "generalTermsUrl": {
             "type": "string",
             "description": "Wskazanie do metody WebApi pozwalającej na pobranie OWUF NFG",
-            "example": "/api/generalTerms"
+            "example": "/generalTerms"
           }
         }
       },

@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "version": "3.0.2",
+    "version": "3.0.3",
     "title": "System Obsługi Faktoringu - WebAPI",
     "description": "Dokumentacja dotycząca WebAPI dla Systemu Obsługi Faktoringu należącego do Narodowego Funduszu Gwarancyjnego S.A.<br /> <br />\nNFG R&D Team: [nfg-rozwoj@nfg.pl](mailto:nfg-rozwoj@nfg.pl)<br /> Zasady współpracy: [https://nfg.pl/wspolpraca-partnerska](https://nfg.pl/wspolpraca-partnerska)<br /> Polityka prywatności: [https://nfg.pl/polityka-prywatnosci](https://nfg.pl/polityka-prywatnosci)<br /> <br />\nKorzystając z WebAPI możesz w prosty sposób:\n  * zweryfikować, czy firma jest już Klientem NFG,\n  * zgłosić fakturę do finansowania,\n  * pobrać informacje dotyczące szczegółów umowy Klienta,\n  * otrzymać listę faktur kosztowych wystawionych w kontekście Klienta.\n\nMateriały dodatkowe ułatwiające proces integracji:<br />\n  1. [Schemat procesu pozyskania Klienta.](https://developer.nfg.pl/Diagrams/Partner_Sales.png)<br />\n  2. [Uproszczony schemat procesu finansowania faktury.](https://developer.nfg.pl/Diagrams/Partner_Financing_Simple.png)<br />\n  3. [Schemat procesu finansowania faktury.](https://developer.nfg.pl/Diagrams/Partner_Financing.png)<br />\n  4. [Kolekcja dostępnych metod WebAPI dla programu Postman](https://developer.nfg.pl/Postman/Collection.json).<br />\n\n<br /> Więcej informacji o usłudze Faktoringu znajdziesz na stronie [https://nfg.pl](https://nfg.pl).",
     "x-logo": {
@@ -292,8 +292,8 @@
         "tags": [
           "Client"
         ],
-        "summary": "Sprawdzenie, czy klient jest zarejestrowany w SOF.",
-        "description": "Metoda pozwala na sprawdzenie, czy klient jest zarejestrowany w SOF.",
+        "summary": "Sprawdzenie, czy klient podpisał umowę z NFG.",
+        "description": "Metoda pozwala na sprawdzenie, czy klient jest zarejestrowany w SOF. Przez rejestrację należy rozumieć podpisanie umowy z NFG.",
         "parameters": [
           {
             "name": "taxId",
@@ -1659,7 +1659,6 @@
         "type": "object",
         "properties": {
           "generalLimit": {
-            "description": "sdgd",
             "$ref": "#/components/schemas/FactoringLimit"
           },
           "silentCessionLimit": {
@@ -1795,12 +1794,10 @@
             "type": "string"
           },
           "countryId": {
-            "description": "Kraj",
+            "description": "Kraj:\n * `1` - Polska\n",
             "type": "string",
             "enum": [
-              {
-                "1": "Polska"
-              }
+              "1"
             ]
           }
         },
@@ -1845,14 +1842,10 @@
             "type": "integer",
             "format": "int64",
             "enum": [
-              {
-                "1": "Jednoosobowa działalność gospodarcza"
-              },
-              {
-                "2": "Przedsiębiorstwo lub instytucja"
-              }
+              1,
+              2
             ],
-            "description": "Rodzaj działalności (zgodnie z opisem wartości)"
+            "description": "Rodzaj działalności (zgodnie z opisem wartości):\n * `1` - Jednoosobowa działalność gospodarcza\n * `2` - Przedsiębiorstwo lub instytucja\n"
           },
           "firstName": {
             "description": "Pole wyłącznie w przypadku JDG - imię właściciela firmy",

@@ -838,6 +838,51 @@
         ]
       }
     },
+	"/invoice/partner/{partnerInvoiceId}/status": {
+      "get": {
+        "tags": [
+          "Invoice"
+        ],
+        "summary": "Status zgłoszonej faktury (na podstawie identyfikatora faktury z systemu partnera)",
+        "description": "Metoda pozwala na pobranie statusu faktury zgłoszonej za pomocą metody: POST /invoice/add.",
+        "parameters": [
+          {
+            "name": "partnerInvoiceId",
+            "in": "path",
+            "required": true,
+            "description": "Identyfikator faktury z systemu partnera",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Informacja o aktualnym statusie faktury.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceStatusResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Brak autoryzacji wywołania metody."
+          },
+          "404": {
+            "description": "Nie znaleziono faktury na podstawie identyfikatora z systemu partnera"
+          }
+        },
+        "security": [
+          {
+            "authorization_code_auth": [
+              "sof.invoice.status"
+            ]
+          }
+        ]
+      }
+    },
     "/invoice/{invoiceId}/cessiontypes": {
       "get": {
         "tags": [
